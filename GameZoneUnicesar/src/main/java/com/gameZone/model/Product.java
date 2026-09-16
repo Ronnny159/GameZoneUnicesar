@@ -1,4 +1,4 @@
-package com.gamezone.model;
+package com.gameZone.model;
 
 import java.io.Serializable;
 
