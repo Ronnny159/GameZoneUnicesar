@@ -5,12 +5,12 @@ import java.time.LocalDate;
 public class CategoryDiscount extends Promotion {
 
     private String category;
-    private double discountAmount;
+    private double percentage;
 
-    public CategoryDiscount(String id, String name, LocalDate startDate, LocalDate endDate, String category, double discountAmount) {
+    public CategoryDiscount(String id, String name, LocalDate startDate, LocalDate endDate, String category, double percentage) {
         super(id, name, startDate, endDate);
         this.category = category;
-        this.discountAmount = discountAmount;
+        this.percentage = percentage;
     }
 
     public String getCategory() {
@@ -21,12 +21,12 @@ public class CategoryDiscount extends Promotion {
         this.category = category;
     }
 
-    public double getDiscountAmount() {
-        return discountAmount;
+    public double getPercentage() {
+        return percentage;
     }
 
-    public void setDiscountAmount(double discountAmount) {
-        this.discountAmount = discountAmount;
+    public void setPercentage(double percentage) {
+        this.percentage = percentage;
     }
 
     @Override
@@ -44,10 +44,10 @@ public class CategoryDiscount extends Promotion {
                 matchesCategory = true;
             }
             if (matchesCategory) {
-            discountAmount += sale.calculateprice();
+            percentage += sale.calculateprice();
             }
         }
-        return discountAmount * (discountAmount / 100);
+        return percentage * (percentage / 100);
     }
     
 }
