@@ -40,7 +40,7 @@ public class CategoryDiscount extends Promotion {
                 && product instanceof Console) {
                 matchesCategory = true;
             } else if (category.equalsIgnoreCase("ACCESSORY")
-                && product instanceof Accessory) {
+                && product instanceof Accesory) {
                 matchesCategory = true;
             }
             if (matchesCategory) {
