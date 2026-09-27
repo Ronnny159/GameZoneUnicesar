@@ -31,23 +31,21 @@ public class CategoryDiscount extends Promotion {
 
     @Override
     public double calculateDiscount(Sale sale) {
-        boolean matchesCategory = false;
-        for(Product product : sale.getproducts()) {
-            if (category.equalsIgnoreCase("VIDEOGAME")
-                && product instanceof VideoGame) {
-                matchesCategory = true;
-            } else if (category.equalsIgnoreCase("CONSOLE")
-                && product instanceof Console) {
-                matchesCategory = true;
-            } else if (category.equalsIgnoreCase("ACCESSORY")
-                && product instanceof Accesory) {
-                matchesCategory = true;
+        double categorySubtotal = 0.0;
+        for (Product product : sale.getproducts()) {
+            boolean matches = false;
+            if (category.equalsIgnoreCase("VIDEOGAME") && product instanceof VideoGame) {
+                matches = true;
+            } else if (category.equalsIgnoreCase("CONSOLE") && product instanceof Console) {
+                matches = true;
+            } else if (category.equalsIgnoreCase("ACCESSORY") && product instanceof Accesory) {
+                matches = true;
             }
-            if (matchesCategory) {
-            percentage += sale.calculateprice();
+            if (matches) {
+                categorySubtotal += product.getPrice();
             }
         }
-        return percentage * (percentage / 100);
+        return categorySubtotal * (percentage / 100);
     }
     
 }

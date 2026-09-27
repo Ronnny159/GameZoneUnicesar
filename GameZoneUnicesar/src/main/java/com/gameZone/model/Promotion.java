@@ -42,10 +42,9 @@ public abstract class Promotion {
     }
     
     public boolean isActive(LocalDate date) {
-        LocalDate today = LocalDate.now();
-        return (today.isEqual(startDate) || today.isAfter(startDate)) &&
-               (today.isEqual(endDate) || today.isBefore(endDate));
+    return (date.isEqual(startDate) || date.isAfter(startDate)) &&
+           (date.isEqual(endDate) || date.isBefore(endDate));
     }
-
+    
     public abstract double calculateDiscount(Sale sale);
 }

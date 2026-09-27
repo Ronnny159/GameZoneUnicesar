@@ -9,13 +9,13 @@ public abstract class Warranty {
     protected LocalDate startDate;
     protected LocalDate endDate;
 
-    public Warranty(String id, Product product, Sale sale, LocalDate startDate, LocalDate endDate) {
-        this.id = id;
-        this.product = product;
-        this.sale = sale;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
+    public Warranty(String id, Product product, Sale sale, LocalDate startDate) {
+    this.id = id;
+    this.product = product;
+    this.sale = sale;
+    this.startDate = startDate;
+    this.endDate = startDate.plusMonths(getDurationInMonths());
+}
 
     public String getId() {
         return id;
@@ -35,12 +35,13 @@ public abstract class Warranty {
 
     public abstract int getDurationInMonths();
     public abstract String getWarrantyType();
-    public abstract double getAdditionalcost();
+    public abstract double getAdditionalCost();
+
 
     public boolean isActive(LocalDate date) {
-        LocalDate today = LocalDate.now();
-        return (today.isEqual(startDate) || today.isAfter(startDate)) &&
-               (today.isEqual(endDate) || today.isBefore(endDate));
+        return (date.isEqual(startDate) || date.isAfter(startDate)) &&
+               (date.isEqual(endDate) || date.isBefore(endDate));
+
     }
 
     public String generateWarrantyCertificate() {
@@ -53,6 +54,6 @@ public abstract class Warranty {
                "End Date: " + endDate + "\n" +
                "Duration: " + getDurationInMonths() + " months\n" +
                "Warranty Type: " + getWarrantyType() + "\n" +
-               "Additional Cost: $" + getAdditionalcost();
+               "Additional Cost: $" + getAdditionalCost();
     }
 }
