@@ -1,13 +1,14 @@
 package com.gameZone.persistence;
 
-import com.gameZone.model.Promotion;
+import com.gameZone.model.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PromotionRepository {
-    private static final String FILE_PATH = "data/promotions.dat";
-    private List<Promotion> promotions;
+public class WarrantyRepository {
+    
+    private static final String FILE_PATH = "data/warranties.dat";
+    private List<Warranty> warranties;
     
     
       private void persist(){
@@ -19,37 +20,37 @@ public class PromotionRepository {
             
             try(ObjectOutputStream oos = new ObjectOutputStream( new FileOutputStream(FILE_PATH))){
             
-                oos.writeObject(promotions);
+                oos.writeObject(warranties);
             
             }catch(IOException e){
             
-                System.err.println("Error Saving Promotions: " + e.getMessage());
+                System.err.println("Error Saving Warranties: " + e.getMessage());
             }
     }
     
-    public PromotionRepository() {
-        this.promotions = new ArrayList<>();
+    public WarrantyRepository() {
+        this.warranties = new ArrayList<>();
         loadAll();
     }
     
-    public void savePromotion(Promotion promotion){
-        promotions.add(promotion); 
+    public void saveWarranty(Warranty warranty){
+        warranties.add(warranty); 
         persist();
     }
     
     private void loadAll() {
         File file = new File(FILE_PATH);
         if (!file.exists()) {
-            promotions = new ArrayList<>();
+            warranties = new ArrayList<>();
             return;
         }
         
         try (ObjectInputStream ois = new ObjectInputStream(
                 new FileInputStream(FILE_PATH))) {
-                promotions = (List<Promotion>) ois.readObject();
+                warranties = (List<Warranty>) ois.readObject();
             } catch (IOException | ClassNotFoundException e) {
-                System.err.println("Error loading promotions: " + e.getMessage());
-                promotions = new ArrayList<>();
+                System.err.println("Error loading warranties: " + e.getMessage());
+                warranties = new ArrayList<>();
         }
     }
 }
