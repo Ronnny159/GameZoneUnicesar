@@ -1,6 +1,6 @@
 package com.gameZone.model;
 
-public class Cable extends Accesory {
+public class Cable extends Accessory {
 
     private double length;
     private String connectorType;

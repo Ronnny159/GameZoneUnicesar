@@ -2,21 +2,20 @@ package com.gameZone.service;
 
 import com.gameZone.model.Product;
 import com.gameZone.persistence.ProductRepository;
+
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Service class for product business logic.
- */
 public class ProductService {
-    
+
     private ProductRepository repository;
     private List<Product> products;
-    
-    public ProductService() {
-        this.repository = new ProductRepository();
-        this.products = repository.load();
+
+    public ProductService(ProductRepository repository) {
+        this.repository = repository;
+        this.products = repository.loadAll();
     }
-    
+
     public boolean registerProduct(Product product) {
         if (findById(product.getId()) != null) {
             return false;
@@ -25,11 +24,11 @@ public class ProductService {
         saveData();
         return true;
     }
-    
+
     public List<Product> getAllProducts() {
-        return products;
+        return new ArrayList<>(products);
     }
-    
+
     public Product findById(String id) {
         for (Product p : products) {
             if (p.getId().equals(id)) {
@@ -38,7 +37,7 @@ public class ProductService {
         }
         return null;
     }
-    
+
     public boolean updateStock(String id, int newQuantity) {
         Product product = findById(id);
         if (product != null) {
@@ -48,12 +47,12 @@ public class ProductService {
         }
         return false;
     }
-    
+
     public boolean hasEnoughStock(String id, int requestedAmount) {
         Product p = findById(id);
         return p != null && p.getQuantity() >= requestedAmount;
     }
-    
+
     public boolean reduceStock(String id, int amount) {
         Product p = findById(id);
         if (p != null && p.getQuantity() >= amount) {
@@ -63,8 +62,18 @@ public class ProductService {
         }
         return false;
     }
-    
+
+    public boolean restoreStock(String productId, int quantity) {
+        Product p = findById(productId);
+        if (p != null) {
+            p.setQuantity(p.getQuantity() + quantity);
+            saveData();
+            return true;
+        }
+        return false;
+    }
+
     private void saveData() {
-        repository.save(products);
+        repository.saveAll(products);
     }
 }

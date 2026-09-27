@@ -1,6 +1,6 @@
 package com.gameZone.model;
 
-public class Controller extends Accesory {
+public class Controller extends Accessory {
 
     private String connectionType;
 
