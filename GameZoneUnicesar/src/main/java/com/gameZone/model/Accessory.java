@@ -3,11 +3,11 @@ package com.gameZone.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Accesory extends Product {
+public abstract class Accessory extends Product {
 
     private List<String> compatibleConsoles;
 
-    public Accesory(String id, String title, double price, int quantity) {
+    public Accessory(String id, String title, double price, int quantity) {
         super(id, title, price, quantity);
         this.compatibleConsoles = new ArrayList<>();
     }

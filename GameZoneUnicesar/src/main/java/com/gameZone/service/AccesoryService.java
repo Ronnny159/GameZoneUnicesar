@@ -1,7 +1,7 @@
 package com.gameZone.service;
 
 import com.gameZone.model.*;
-import com.gameZone.persistence.AccesoryRepository;
+import com.gameZone.persistence.AccessoryRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,10 +10,10 @@ import java.util.Optional;
 
 public class AccesoryService {
 
-    private final AccesoryRepository accesoryRepository;
-    private List<Accesory> accesories;
+    private final AccessoryRepository accesoryRepository;
+    private List<Accessory> accesories;
 
-    public AccesoryService(AccesoryRepository accesoryRepository) {
+    public AccesoryService(AccessoryRepository accesoryRepository) {
         this.accesoryRepository = accesoryRepository;
         this.accesories = new ArrayList<>(accesoryRepository.loadAll());
     }
@@ -48,13 +48,13 @@ public class AccesoryService {
         return memory;
     }
 
-    public List<Accesory> listAllAccessories() {
+    public List<Accessory> listAllAccessories() {
         return new ArrayList<>(accesories);
     }
 
-    public List<Accesory> listAccessoriesByType(String type) {
-        List<Accesory> result = new ArrayList<>();
-        for (Accesory accesory : accesories) {
+    public List<Accessory> listAccessoriesByType(String type) {
+        List<Accessory> result = new ArrayList<>();
+        for (Accessory accesory : accesories) {
             if (accesory.getAccessoryType().equalsIgnoreCase(type)) {
                 result.add(accesory);
             }
@@ -62,9 +62,9 @@ public class AccesoryService {
         return result;
     }
 
-    public List<Accesory> findAccessoriesCompatibleWith(String consoleId) {
-        List<Accesory> result = new ArrayList<>();
-        for (Accesory accesory : accesories) {
+    public List<Accessory> findAccessoriesCompatibleWith(String consoleId) {
+        List<Accessory> result = new ArrayList<>();
+        for (Accessory accesory : accesories) {
             if (accesory.isCompatibleWith(consoleId)) {
                 result.add(accesory);
             }
@@ -72,8 +72,8 @@ public class AccesoryService {
         return result;
     }
 
-    public Accesory findById(String id) {
-        Optional<Accesory> found = accesories.stream()
+    public Accessory findById(String id) {
+        Optional<Accessory> found = accesories.stream()
                 .filter(a -> a.getId().equals(id))
                 .findFirst();
         return found.orElseThrow(() ->
@@ -81,7 +81,7 @@ public class AccesoryService {
     }
 
     public void updateStock(String accesoryId, int quantity) {
-        Accesory accesory = findById(accesoryId);
+        Accessory accesory = findById(accesoryId);
         int newQuantity = accesory.getQuantity() + quantity;
         if (newQuantity < 0) {
             throw new IllegalStateException("Insufficient stock for accessory: " + accesoryId);

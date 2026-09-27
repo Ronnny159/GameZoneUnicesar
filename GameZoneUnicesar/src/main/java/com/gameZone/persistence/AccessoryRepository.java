@@ -2,18 +2,12 @@ package com.gameZone.persistence;
 
 import com.gameZone.model.*;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.*;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccesoryRepository {
+public class AccessoryRepository {
 
     private static final String DATA_DIRECTORY = "data";
     private static final String FILE_PATH = DATA_DIRECTORY + "/accessories.csv";
@@ -21,7 +15,7 @@ public class AccesoryRepository {
     private static final String CONSOLE_LIST_DELIMITER = "\\|";
     private static final String CONSOLE_LIST_JOINER = "|";
 
-    public AccesoryRepository() {
+    public AccessoryRepository() {
         try {
             Files.createDirectories(Paths.get(DATA_DIRECTORY));
         } catch (IOException e) {
@@ -29,10 +23,10 @@ public class AccesoryRepository {
         }
     }
 
-    public void saveAll(List<Accesory> accesories) {
+    public void saveAll(List<Accessory> accessories) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
-            for (Accesory accesory : accesories) {
-                writer.write(toCsvLine(accesory));
+            for (Accessory accessory : accessories) {
+                writer.write(toCsvLine(accessory));
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -40,11 +34,11 @@ public class AccesoryRepository {
         }
     }
 
-    public List<Accesory> loadAll() {
-        List<Accesory> accesories = new ArrayList<>();
+    public List<Accessory> loadAll() {
+        List<Accessory> accessories = new ArrayList<>();
         Path path = Paths.get(FILE_PATH);
         if (!Files.exists(path)) {
-            return accesories;
+            return accessories;
         }
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;
@@ -52,39 +46,39 @@ public class AccesoryRepository {
                 if (line.isBlank()) {
                     continue;
                 }
-                Accesory accesory = fromCsvLine(line);
-                if (accesory != null) {
-                    accesories.add(accesory);
+                Accessory accessory = fromCsvLine(line);
+                if (accessory != null) {
+                    accessories.add(accessory);
                 }
             }
         } catch (IOException e) {
             throw new RuntimeException("Error loading accessories", e);
         }
-        return accesories;
+        return accessories;
     }
 
-    private String toCsvLine(Accesory accesory) {
-        String consoleIds = String.join(CONSOLE_LIST_JOINER, accesory.getCompatibleConsoles());
+    private String toCsvLine(Accessory accessory) {
+        String consoleIds = String.join(CONSOLE_LIST_JOINER, accessory.getCompatibleConsoles());
         StringBuilder line = new StringBuilder();
-        line.append(accesory.getAccessoryType()).append(SEPARATOR)
-                .append(accesory.getId()).append(SEPARATOR)
-                .append(accesory.getTitle()).append(SEPARATOR)
-                .append(accesory.getPrice()).append(SEPARATOR)
-                .append(accesory.getQuantity()).append(SEPARATOR)
+        line.append(accessory.getAccessoryType()).append(SEPARATOR)
+                .append(accessory.getId()).append(SEPARATOR)
+                .append(accessory.getTitle()).append(SEPARATOR)
+                .append(accessory.getPrice()).append(SEPARATOR)
+                .append(accessory.getQuantity()).append(SEPARATOR)
                 .append(consoleIds).append(SEPARATOR);
 
-        if (accesory instanceof Controller controller) {
+        if (accessory instanceof Controller controller) {
             line.append(controller.getConnectionType());
-        } else if (accesory instanceof Cable cable) {
+        } else if (accessory instanceof Cable cable) {
             line.append(cable.getLength()).append(SEPARATOR).append(cable.getConnectorType());
-        } else if (accesory instanceof Memory memory) {
+        } else if (accessory instanceof Memory memory) {
             line.append(memory.getGigabytes()).append(SEPARATOR).append(memory.getMemoryType());
         }
 
         return line.toString();
     }
 
-    private Accesory fromCsvLine(String line) {
+    private Accessory fromCsvLine(String line) {
         String[] fields = line.split(SEPARATOR, -1);
 
         String type = fields[0];
@@ -101,7 +95,7 @@ public class AccesoryRepository {
             }
         }
 
-        Accesory accesory = switch (type) {
+        Accessory accessory = switch (type) {
             case "CONTROLLER" -> new Controller(id, title, price, quantity, fields[6]);
             case "CABLE" -> new Cable(id, title, price, quantity,
                     Double.parseDouble(fields[6]), fields[7]);
@@ -110,10 +104,10 @@ public class AccesoryRepository {
             default -> null;
         };
 
-        if (accesory != null) {
-            accesory.setCompatibleConsoles(compatibleConsoles);
+        if (accessory != null) {
+            accessory.setCompatibleConsoles(compatibleConsoles);
         }
 
-        return accesory;
+        return accessory;
     }
 }

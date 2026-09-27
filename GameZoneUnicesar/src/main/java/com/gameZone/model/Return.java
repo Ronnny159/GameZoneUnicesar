@@ -19,45 +19,52 @@ public class Return {
         this.reason = reason;
         this.refundAmount = refundAmount;
     }
-    public String getId() {
-        return id;
-    }
-    public Sale getSale() {
-        return sale;
-    }
-    public LocalDate getDate() {
-        return date;
-    }
-    public List<Product> getReturnedProducts() {
-        return returnedProducts;
-    }
-    public String getReason() {
-        return reason;
-    }
-    public double getRefundAmount() {
-        return refundAmount;
-    }
 
-    public double calculateRefundAmount(){
+    public String getId() { return id; }
+    public Sale getSale() { return sale; }
+    public LocalDate getDate() { return date; }
+    public List<Product> getReturnedProducts() { return returnedProducts; }
+    public String getReason() { return reason; }
+    public double getRefundAmount() { return refundAmount; }
+
+    public double calculateRefundAmount() {
+        double subtotal = sale.calculateprice();
         double totalRefund = 0.0;
+
         for (Product product : returnedProducts) {
-            totalRefund += product.getPrice();
+            double proportional = product.getPrice();
+            if (subtotal > 0 && sale.getdiscountAmount() > 0) {
+                proportional = product.getPrice() * (1 - sale.getdiscountAmount() / subtotal);
+            }
+            totalRefund += proportional;
         }
+
+        this.refundAmount = totalRefund;
         return totalRefund;
     }
 
-    public String generateReturnReceipt(){
+    public String generateReturnReceipt() {
         StringBuilder receipt = new StringBuilder();
-        receipt.append("Return Receipt\n");
-        receipt.append("Return ID: ").append(id).append("\n");
-        receipt.append("Sale ID: ").append(sale.getid()).append("\n");
-        receipt.append("Return Date: ").append(date).append("\n");
-        receipt.append("Returned Products:\n");
+        receipt.append("Recibo de Devolución\n");
+        receipt.append("-------------------\n");
+        receipt.append("ID Devolución: ").append(id).append("\n");
+        receipt.append("ID Venta: ").append(sale.getid()).append("\n");
+        receipt.append("Fecha: ").append(date).append("\n");
+        receipt.append("Productos devueltos:\n");
+
+        double subtotal = sale.calculateprice();
         for (Product product : returnedProducts) {
-            receipt.append("- ").append(product.getTitle()).append(" (Price: $").append(product.getPrice()).append(")\n");
+            double proportional = product.getPrice();
+            if (subtotal > 0 && sale.getdiscountAmount() > 0) {
+                proportional = product.getPrice() * (1 - sale.getdiscountAmount() / subtotal);
+            }
+            receipt.append("- ").append(product.getTitle())
+                   .append(" | Precio lista: $").append(product.getPrice())
+                   .append(" | Reembolso: $").append(proportional).append("\n");
         }
-        receipt.append("Reason for Return: ").append(reason).append("\n");
-        receipt.append("Total Refund Amount: $").append(refundAmount).append("\n");
+
+        receipt.append("Motivo: ").append(reason).append("\n");
+        receipt.append("Monto total reembolsado: $").append(refundAmount).append("\n");
         return receipt.toString();
     }
 }

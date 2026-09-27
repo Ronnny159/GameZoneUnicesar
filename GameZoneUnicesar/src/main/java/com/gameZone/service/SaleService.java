@@ -34,9 +34,9 @@ public class SaleService {
      
      for(Product p:sale.getproducts()){
       
-         if (p instanceof Accesory){
+         if (p instanceof Accessory){
          
-             Accesory accesory = (Accesory) p;
+             Accessory accesory = (Accessory) p;
              
             if(!hasEnoughStockAccesory(accesory.getId(), 1)){
             
@@ -66,7 +66,7 @@ public class SaleService {
      
      }
      
-     saleRepository.savesales(sale);
+     saleRepository.saveAll(getAllSales());;
     }
     
     
@@ -97,7 +97,7 @@ public class SaleService {
     private boolean hasEnoughStockAccesory(String id, int amount){
     
     try{
-        Accesory accesory = accesoryService.findById(id);
+        Accessory accesory = accesoryService.findById(id);
         return accesory.getQuantity() >= amount;
     } catch (Exception e){
         return false;

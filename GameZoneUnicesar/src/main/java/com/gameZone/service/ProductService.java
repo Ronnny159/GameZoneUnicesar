@@ -14,7 +14,7 @@ public class ProductService {
     
     public ProductService() {
         this.repository = new ProductRepository();
-        this.products = repository.load();
+        this.products = repository.loadAll();
     }
     
     public boolean registerProduct(Product product) {
@@ -65,6 +65,6 @@ public class ProductService {
     }
     
     private void saveData() {
-        repository.save(products);
+        repository.saveAll(products);
     }
 }

@@ -4,10 +4,10 @@ import java.time.LocalDate;
 
 public abstract class Promotion {
 
-    protected String id;
-    protected String name;
-    protected LocalDate startDate;
-    protected LocalDate endDate;
+    private String id;
+    private String name;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     public Promotion(String id, String name, LocalDate startDate, LocalDate endDate) {
         this.id = id;

@@ -1,6 +1,6 @@
 package com.gameZone.model;
 
-public class Memory extends Accesory {
+public class Memory extends Accessory {
 
     private int gigabytes;
     private String memoryType;
