@@ -32,7 +32,7 @@ public class PromotionRepository {
         loadAll();
     }
     
-    public void savePromotion(Promotion promotion){
+    public void saveAll(Promotion promotion){
         promotions.add(promotion); 
         persist();
     }

@@ -4,11 +4,9 @@ import com.gameZone.model.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-
-public class WarrantyRepository {
-    
-    private static final String FILE_PATH = "data/warranties.dat";
-    private List<Warranty> warranties;
+public class ReturnRepository {
+    private static final String FILE_PATH = "data/returns.dat";
+    private List<Return> returns;
     
     
       private void persist(){
@@ -20,37 +18,37 @@ public class WarrantyRepository {
             
             try(ObjectOutputStream oos = new ObjectOutputStream( new FileOutputStream(FILE_PATH))){
             
-                oos.writeObject(warranties);
+                oos.writeObject(returns);
             
             }catch(IOException e){
             
-                System.err.println("Error Saving Warranties: " + e.getMessage());
+                System.err.println("Error Saving Returns: " + e.getMessage());
             }
     }
     
-    public WarrantyRepository() {
-        this.warranties = new ArrayList<>();
+    public ReturnRepository() {
+        this.returns = new ArrayList<>();
         loadAll();
     }
     
-    public void saveAll(Warranty warranty){
-        warranties.add(warranty); 
+    public void saveAll(Return returnItem){
+        returns.add(returnItem); 
         persist();
     }
     
     private void loadAll() {
         File file = new File(FILE_PATH);
         if (!file.exists()) {
-            warranties = new ArrayList<>();
+            returns = new ArrayList<>();
             return;
         }
         
         try (ObjectInputStream ois = new ObjectInputStream(
                 new FileInputStream(FILE_PATH))) {
-                warranties = (List<Warranty>) ois.readObject();
+                returns = (List<Return>) ois.readObject();
             } catch (IOException | ClassNotFoundException e) {
-                System.err.println("Error loading warranties: " + e.getMessage());
-                warranties = new ArrayList<>();
+                System.err.println("Error loading returns: " + e.getMessage());
+                returns = new ArrayList<>();
         }
     }
 }
