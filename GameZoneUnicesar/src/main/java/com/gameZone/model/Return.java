@@ -38,7 +38,7 @@ public class Return {
         return refundAmount;
     }
 
-    public double calculateRefundAAmount(){
+    public double calculateRefundAmount(){
         double totalRefund = 0.0;
         for (Product product : returnedProducts) {
             totalRefund += product.getPrice();
