@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-public class AccesoryService {
+public class AccessoryService {
 
-    private final AccessoryRepository accesoryRepository;
-    private List<Accessory> accesories;
+    private final AccessoryRepository accessoryRepository;
+    private List<Accessory> accessories;
 
-    public AccesoryService(AccessoryRepository accesoryRepository) {
-        this.accesoryRepository = accesoryRepository;
-        this.accesories = new ArrayList<>(accesoryRepository.loadAll());
+    public AccessoryService(AccessoryRepository accessoryRepository) {
+        this.accessoryRepository = accessoryRepository;
+        this.accessories = new ArrayList<>(accessoryRepository.loadAll());
     }
 
     public Controller registerController(String id, String title, double price, int quantity,
@@ -24,7 +24,7 @@ public class AccesoryService {
         if (compatibleConsoles != null) {
             controller.setCompatibleConsoles(new ArrayList<>(compatibleConsoles));
         }
-        accesories.add(controller);
+        accessories.add(controller);
         persist();
         return controller;
     }
@@ -32,7 +32,7 @@ public class AccesoryService {
     public Cable registerCable(String id, String title, double price, int quantity,
                                 double length, String connectorType) {
         Cable cable = new Cable(id, title, price, quantity, length, connectorType);
-        accesories.add(cable);
+        accessories.add(cable);
         persist();
         return cable;
     }
@@ -43,20 +43,20 @@ public class AccesoryService {
         if (compatibleConsoles != null) {
             memory.setCompatibleConsoles(new ArrayList<>(compatibleConsoles));
         }
-        accesories.add(memory);
+        accessories.add(memory);
         persist();
         return memory;
     }
 
     public List<Accessory> listAllAccessories() {
-        return new ArrayList<>(accesories);
+        return new ArrayList<>(accessories);
     }
 
     public List<Accessory> listAccessoriesByType(String type) {
         List<Accessory> result = new ArrayList<>();
-        for (Accessory accesory : accesories) {
-            if (accesory.getAccessoryType().equalsIgnoreCase(type)) {
-                result.add(accesory);
+        for (Accessory accessory : accessories) {
+            if (accessory.getAccessoryType().equalsIgnoreCase(type)) {
+                result.add(accessory);
             }
         }
         return result;
@@ -64,33 +64,39 @@ public class AccesoryService {
 
     public List<Accessory> findAccessoriesCompatibleWith(String consoleId) {
         List<Accessory> result = new ArrayList<>();
-        for (Accessory accesory : accesories) {
-            if (accesory.isCompatibleWith(consoleId)) {
-                result.add(accesory);
+        for (Accessory accessory : accessories) {
+            if (accessory.isCompatibleWith(consoleId)) {
+                result.add(accessory);
             }
         }
         return result;
     }
 
     public Accessory findById(String id) {
-        Optional<Accessory> found = accesories.stream()
+        Optional<Accessory> found = accessories.stream()
                 .filter(a -> a.getId().equals(id))
                 .findFirst();
         return found.orElseThrow(() ->
                 new NoSuchElementException("No accessory found with id: " + id));
     }
 
-    public void updateStock(String accesoryId, int quantity) {
-        Accessory accesory = findById(accesoryId);
-        int newQuantity = accesory.getQuantity() + quantity;
+    public void updateStock(String accessoryId, int quantity) {
+        Accessory accessory = findById(accessoryId);
+        int newQuantity = accessory.getQuantity() + quantity;
         if (newQuantity < 0) {
-            throw new IllegalStateException("Insufficient stock for accessory: " + accesoryId);
+            throw new IllegalStateException("Insufficient stock for accessory: " + accessoryId);
         }
-        accesory.setQuantity(newQuantity);
+        accessory.setQuantity(newQuantity);
+        persist();
+    }
+
+    public void restoreStock(String accessoryId, int quantity) {
+        Accessory accessory = findById(accessoryId);
+        accessory.setQuantity(accessory.getQuantity() + quantity);
         persist();
     }
 
     private void persist() {
-        accesoryRepository.saveAll(accesories);
+        accessoryRepository.saveAll(accessories);
     }
 }
