@@ -18,10 +18,14 @@ public class ReturnRepository {
 
     private SaleRepository saleRepository;
     private ProductRepository productRepository;
+    private AccessoryRepository accessoryRepository;
 
-    public ReturnRepository(SaleRepository saleRepository, ProductRepository productRepository) {
+    public ReturnRepository(SaleRepository saleRepository,
+                            ProductRepository productRepository,
+                            AccessoryRepository accessoryRepository) {
         this.saleRepository = saleRepository;
         this.productRepository = productRepository;
+        this.accessoryRepository = accessoryRepository;
         try {
             Files.createDirectories(Paths.get(DATA_DIRECTORY));
         } catch (IOException e) {
@@ -88,10 +92,15 @@ public class ReturnRepository {
         String reason = fields[4];
         double refund = Double.parseDouble(fields[5]);
 
+        // Resolve products (both regular products and accessories)
+        List<Product> allProducts = new ArrayList<>();
+        allProducts.addAll(productRepository.loadAll());
+        allProducts.addAll(accessoryRepository.loadAll());
+
         List<Product> products = new ArrayList<>();
         if (!productsRaw.isBlank()) {
             for (String pid : productsRaw.split(PRODUCT_DELIMITER)) {
-                for (Product p : productRepository.loadAll()) {
+                for (Product p : allProducts) {
                     if (p.getId().equals(pid)) {
                         products.add(p);
                         break;

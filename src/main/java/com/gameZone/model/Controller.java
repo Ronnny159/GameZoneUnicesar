@@ -26,4 +26,10 @@ public class Controller extends Accessory {
     public String getDescription() {
         return super.getDescription() + " | Connection type: " + connectionType;
     }
+
+    @Override
+    public String getCategory() {
+        return "ACCESSORY";
+    }
+
 }

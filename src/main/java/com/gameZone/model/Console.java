@@ -22,6 +22,11 @@ public class Console extends Product {
     public int getGeneration() { return generation; }
     
     @Override
+    public String getCategory() {
+        return "CONSOLE";
+    }
+
+    @Override
     public String getDescription() {
         return "Console: " + getTitle() + 
                " | Brand: " + brand + 

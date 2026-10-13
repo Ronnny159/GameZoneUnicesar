@@ -200,7 +200,7 @@ As Technical Lead, review the entire integrated system (model, persistence, serv
 - `Warranty.isActive(LocalDate)` and `Promotion.isActive(LocalDate)` ignored the parameter.
 - `Return.calculateRefundAmount()` did not apply the proportional discount (A5).
 - `Return.generateReturnReceipt()` did not show the discount breakdown.
-- `Accesory` was misspelled (should be `Accessory`).
+- `Accessory` was misspelled (should be `Accessory`).
 - `Person`, `Promotion`, and `Warranty` used `protected` attributes instead of `private`.
 
 **Persistence layer:**
@@ -244,7 +244,7 @@ As Technical Lead, review the entire integrated system (model, persistence, serv
 3. Fixed the `Warranty` constructor to compute `endDate` internally.
 4. Corrected `isActive` in `Warranty` and `Promotion` to use the parameter.
 5. Updated `Return.calculateRefundAmount()` and `generateReturnReceipt()`.
-6. Renamed `Accesory` to `Accessory` across all files.
+6. Renamed `Accessory` to `Accessory` across all files.
 7. Changed `protected` attributes to `private`.
 8. Migrated `.dat` repositories to CSV with type discriminators.
 9. Fixed `saveAll` and `loadAll` signatures in all repositories.

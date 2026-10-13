@@ -31,6 +31,14 @@ public abstract class Product implements Serializable {
     public void setQuantity(int quantity) { this.quantity = quantity; }
     
     /**
+     * Returns the product category used by category-based promotions.
+     * Subclasses override this method to return their own category.
+     *
+     * @return the product category
+     */
+    public abstract String getCategory();
+    
+    /**
      * Returns a full description. Must be implemented by subclasses.
      * 
      * @return formatted description string

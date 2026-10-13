@@ -22,6 +22,11 @@ public class VideoGame extends Product {
     public String getAgeRating() { return ageRating; }
     
     @Override
+    public String getCategory() {
+        return "VIDEOGAME";
+    }
+
+    @Override
     public String getDescription() {
         return "VideoGame: " + getTitle() + 
                " | Platform: " + platform + 

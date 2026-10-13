@@ -1,9 +1,6 @@
 package com.gameZone.persistence;
 
-import com.gameZone.model.Customer;
-import com.gameZone.model.Product;
-import com.gameZone.model.Sale;
-import com.gameZone.model.Seller;
+import com.gameZone.model.*;
 
 import java.io.*;
 import java.nio.file.*;
@@ -20,10 +17,14 @@ public class SaleRepository {
     private static final String PRODUCT_JOINER = "|";
 
     private ProductRepository productRepository;
+    private AccessoryRepository accessoryRepository;
     private PersonRepository personRepository;
 
-    public SaleRepository(ProductRepository productRepository, PersonRepository personRepository) {
+    public SaleRepository(ProductRepository productRepository,
+                          AccessoryRepository accessoryRepository,
+                          PersonRepository personRepository) {
         this.productRepository = productRepository;
+        this.accessoryRepository = accessoryRepository;
         this.personRepository = personRepository;
         try {
             Files.createDirectories(Paths.get(DATA_DIRECTORY));
@@ -147,8 +148,11 @@ public class SaleRepository {
             return null;
         }
 
-        // Resolve products
-        List<Product> allProducts = productRepository.loadAll();
+        // Resolve products (both regular products and accessories)
+        List<Product> allProducts = new ArrayList<>();
+        allProducts.addAll(productRepository.loadAll());
+        allProducts.addAll(accessoryRepository.loadAll());
+
         List<Product> products = new ArrayList<>();
         if (!productsRaw.isBlank()) {
             for (String pid : productsRaw.split(PRODUCT_DELIMITER)) {

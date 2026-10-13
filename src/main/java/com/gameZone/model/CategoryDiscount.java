@@ -29,19 +29,11 @@ public class CategoryDiscount extends Promotion {
         this.percentage = percentage;
     }
 
-    @Override
+   @Override
     public double calculateDiscount(Sale sale) {
         double categorySubtotal = 0.0;
         for (Product product : sale.getproducts()) {
-            boolean matches = false;
-            if (category.equalsIgnoreCase("VIDEOGAME") && product instanceof VideoGame) {
-                matches = true;
-            } else if (category.equalsIgnoreCase("CONSOLE") && product instanceof Console) {
-                matches = true;
-            } else if (category.equalsIgnoreCase("ACCESSORY") && product instanceof Accessory) {
-                matches = true;
-            }
-            if (matches) {
+            if (product.getCategory().equalsIgnoreCase(category)) {
                 categorySubtotal += product.getPrice();
             }
         }
