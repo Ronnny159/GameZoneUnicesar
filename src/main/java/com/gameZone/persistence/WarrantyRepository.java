@@ -16,10 +16,14 @@ public class WarrantyRepository {
 
     private SaleRepository saleRepository;
     private ProductRepository productRepository;
+    private AccessoryRepository accessoryRepository;
 
-    public WarrantyRepository(SaleRepository saleRepository, ProductRepository productRepository) {
+    public WarrantyRepository(SaleRepository saleRepository,
+                              ProductRepository productRepository,
+                              AccessoryRepository accessoryRepository) {
         this.saleRepository = saleRepository;
         this.productRepository = productRepository;
+        this.accessoryRepository = accessoryRepository;
         try {
             Files.createDirectories(Paths.get(DATA_DIRECTORY));
         } catch (IOException e) {
@@ -86,7 +90,12 @@ public class WarrantyRepository {
 
         String type = fields[0];
         String id = fields[1];
-        Product product = productRepository.loadAll().stream()
+
+        List<Product> allProducts = new ArrayList<>();
+        allProducts.addAll(productRepository.loadAll());
+        allProducts.addAll(accessoryRepository.loadAll());
+
+        Product product = allProducts.stream()
                 .filter(p -> p.getId().equals(fields[2]))
                 .findFirst()
                 .orElse(null);

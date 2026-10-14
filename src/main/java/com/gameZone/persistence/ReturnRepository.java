@@ -87,6 +87,12 @@ public class ReturnRepository {
 
         String id = fields[0];
         Sale sale = saleRepository.findById(fields[1]);
+
+        // Guard against orphan returns (sale no longer exists)
+        if (sale == null) {
+            return null;
+        }
+
         LocalDate date = LocalDate.parse(fields[2]);
         String productsRaw = fields[3];
         String reason = fields[4];

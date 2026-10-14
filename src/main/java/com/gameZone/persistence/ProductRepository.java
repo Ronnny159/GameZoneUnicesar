@@ -56,6 +56,15 @@ public class ProductRepository {
         return products;
     }
 
+    public Product findById(String productId) {
+        for (Product p : loadAll()) {
+            if (p.getId().equals(productId)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
     private String toCsvLine(Product product) {
         StringBuilder line = new StringBuilder();
         if (product instanceof VideoGame vg) {

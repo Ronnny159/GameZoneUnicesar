@@ -8,7 +8,7 @@ import java.util.Scanner;
 /**
  * Entry point for the GameZone Unicesar system.
  */
-public class main {
+public class Main {
 
     public static void main(String[] args) {
         // ---------- Persistence layer ----------
@@ -19,7 +19,7 @@ public class main {
         SaleRepository saleRepository = new SaleRepository(
                 productRepository, accessoryRepository, personRepository);
         WarrantyRepository warrantyRepository = new WarrantyRepository(
-                saleRepository, productRepository);
+                saleRepository, productRepository, accessoryRepository);
         ReturnRepository returnRepository = new ReturnRepository(
                 saleRepository, productRepository, accessoryRepository);
 
