@@ -9,30 +9,34 @@ import java.util.List;
 
 public class PromotionService {
 
-    private PromotionRepository promotionRepository;
+    private final PromotionRepository promotionRepository;
+    private final List<Promotion> promotions;
 
     public PromotionService(PromotionRepository promotionRepository) {
         this.promotionRepository = promotionRepository;
+        this.promotions = new ArrayList<>(promotionRepository.loadAll());
     }
 
     public PercentageDiscount registerPercentageDiscount(String id, String name,
-                                                          LocalDate startDate, LocalDate endDate,
-                                                          double percentage) {
+        LocalDate startDate, LocalDate endDate,double percentage) {
+
         PercentageDiscount promotion = new PercentageDiscount(id, name, startDate, endDate, percentage);
-        persist(promotion);
+        promotions.add(promotion);
+        persist();
         return promotion;
     }
 
     public CategoryDiscount registerCategoryDiscount(String id, String name,
-                                                      LocalDate startDate, LocalDate endDate,
-                                                      String category, double percentage) {
+        LocalDate startDate, LocalDate endDate,String category, double percentage) {
+            
         if (!category.equalsIgnoreCase("VIDEOGAME") &&
             !category.equalsIgnoreCase("CONSOLE") &&
             !category.equalsIgnoreCase("ACCESSORY")) {
             throw new IllegalArgumentException("Invalid category: " + category);
         }
         CategoryDiscount promotion = new CategoryDiscount(id, name, startDate, endDate, category, percentage);
-        persist(promotion);
+        promotions.add(promotion);
+        persist();
         return promotion;
     }
 
@@ -40,18 +44,19 @@ public class PromotionService {
                                                               LocalDate startDate, LocalDate endDate,
                                                               int minQuantity, double percentage) {
         BulkPurchaseDiscount promotion = new BulkPurchaseDiscount(id, name, startDate, endDate, minQuantity, percentage);
-        persist(promotion);
+        promotions.add(promotion);
+        persist();
         return promotion;
     }
 
     public List<Promotion> listAllPromotions() {
-        return promotionRepository.loadAll();
+        return new ArrayList<>(promotions);
     }
 
     public List<Promotion> listActivePromotions() {
         LocalDate today = LocalDate.now();
         List<Promotion> active = new ArrayList<>();
-        for (Promotion p : promotionRepository.loadAll()) {
+        for (Promotion p : promotions) {
             if (p.isActive(today)) {
                 active.add(p);
             }
@@ -60,7 +65,7 @@ public class PromotionService {
     }
 
     public Promotion findById(String promotionId) {
-        for (Promotion p : promotionRepository.loadAll()) {
+        for (Promotion p : promotions) {
             if (p.getId().equals(promotionId)) {
                 return p;
             }
@@ -69,7 +74,6 @@ public class PromotionService {
     }
 
     public Promotion findBestPromotionFor(Sale sale) {
-        List<Promotion> promotions = promotionRepository.loadAll();
         Promotion bestPromotion = null;
         double maxDiscount = 0;
 
@@ -86,9 +90,7 @@ public class PromotionService {
         return bestPromotion;
     }
 
-    private void persist(Promotion promotion) {
-        List<Promotion> all = promotionRepository.loadAll();
-        all.add(promotion);
-        promotionRepository.saveAll(all);
+    private void persist() {
+        promotionRepository.saveAll(promotions);
     }
 }

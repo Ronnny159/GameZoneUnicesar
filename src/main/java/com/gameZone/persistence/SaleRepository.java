@@ -1,9 +1,6 @@
 package com.gameZone.persistence;
 
-import com.gameZone.model.Customer;
-import com.gameZone.model.Product;
-import com.gameZone.model.Sale;
-import com.gameZone.model.Seller;
+import com.gameZone.model.*;
 
 import java.io.*;
 import java.nio.file.*;
@@ -20,10 +17,14 @@ public class SaleRepository {
     private static final String PRODUCT_JOINER = "|";
 
     private ProductRepository productRepository;
+    private AccessoryRepository accessoryRepository;
     private PersonRepository personRepository;
 
-    public SaleRepository(ProductRepository productRepository, PersonRepository personRepository) {
+    public SaleRepository(ProductRepository productRepository,
+                          AccessoryRepository accessoryRepository,
+                          PersonRepository personRepository) {
         this.productRepository = productRepository;
+        this.accessoryRepository = accessoryRepository;
         this.personRepository = personRepository;
         try {
             Files.createDirectories(Paths.get(DATA_DIRECTORY));
@@ -68,7 +69,7 @@ public class SaleRepository {
 
     public Sale findById(String saleId) {
         for (Sale sale : loadAll()) {
-            if (sale.getid().equals(saleId)) {
+            if (sale.getId().equals(saleId)) {
                 return sale;
             }
         }
@@ -78,7 +79,7 @@ public class SaleRepository {
     public List<Sale> findSalesByCustomer(String customerId) {
         List<Sale> result = new ArrayList<>();
         for (Sale sale : loadAll()) {
-            if (sale.getcostumer().getId().equals(customerId)) {
+            if (sale.getCustomer().getId().equals(customerId)) {
                 result.add(sale);
             }
         }
@@ -88,7 +89,7 @@ public class SaleRepository {
     public List<Sale> findSalesBySeller(String sellerId) {
         List<Sale> result = new ArrayList<>();
         for (Sale sale : loadAll()) {
-            if (sale.getseller().getId().equals(sellerId)) {
+            if (sale.getSeller().getId().equals(sellerId)) {
                 result.add(sale);
             }
         }
@@ -97,19 +98,19 @@ public class SaleRepository {
 
     private String toCsvLine(Sale sale) {
         List<String> productIds = new ArrayList<>();
-        for (Product product : sale.getproducts()) {
+        for (Product product : sale.getProducts()) {
             productIds.add(product.getId());
         }
         String productIdsJoined = String.join(PRODUCT_JOINER, productIds);
 
         return String.join(SEPARATOR,
-                sale.getid(),
-                sale.getdate().toString(),
-                sale.getcostumer().getId(),
-                sale.getseller().getId(),
+                sale.getId(),
+                sale.getDate().toString(),
+                sale.getCustomer().getId(),
+                sale.getSeller().getId(),
                 productIdsJoined,
-                sale.getappliedPromotionName() == null ? "" : sale.getappliedPromotionName(),
-                String.valueOf(sale.getdiscountAmount()),
+                sale.getAppliedPromotionName() == null ? "" : sale.getAppliedPromotionName(),
+                String.valueOf(sale.getDiscountAmount()),
                 String.valueOf(sale.getExtendedWarrantyCost()));
     }
 
@@ -125,7 +126,6 @@ public class SaleRepository {
         double discount = Double.parseDouble(fields[6]);
         double warrantyCost = fields.length > 7 ? Double.parseDouble(fields[7]) : 0.0;
 
-        // Resolve customer
         Customer customer = null;
         for (Customer c : personRepository.loadCustomers()) {
             if (c.getId().equals(customerId)) {
@@ -134,7 +134,6 @@ public class SaleRepository {
             }
         }
 
-        // Resolve seller
         Seller seller = null;
         for (Seller s : personRepository.loadSellers()) {
             if (s.getId().equals(sellerId)) {
@@ -147,8 +146,10 @@ public class SaleRepository {
             return null;
         }
 
-        // Resolve products
-        List<Product> allProducts = productRepository.loadAll();
+        List<Product> allProducts = new ArrayList<>();
+        allProducts.addAll(productRepository.loadAll());
+        allProducts.addAll(accessoryRepository.loadAll());
+
         List<Product> products = new ArrayList<>();
         if (!productsRaw.isBlank()) {
             for (String pid : productsRaw.split(PRODUCT_DELIMITER)) {
@@ -162,7 +163,7 @@ public class SaleRepository {
         }
 
         Sale sale = new Sale(saleId, customer, seller, products, promotionName, discount);
-        sale.setdate(date);
+        sale.setDate(date);
         sale.setExtendedWarrantyCost(warrantyCost);
         return sale;
     }

@@ -1,1 +1,4 @@
-VIDEOGAME;011;Dead of dead;23000.0;90;playstation;accion;19
+VIDEOGAME;VG-001;Dead of Dead;23000.0;90;playstation;accion;19
+VIDEOGAME;VG-002;FIFA 25;180000.0;50;playstation;deportes;3
+CONSOLE;CON-001;PlayStation 5;2500000.0;10;Sony;PS5;5
+CONSOLE;CON-002;Xbox Series X;2400000.0;8;Microsoft;Series X;4

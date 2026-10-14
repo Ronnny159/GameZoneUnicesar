@@ -18,10 +18,14 @@ public class ReturnRepository {
 
     private SaleRepository saleRepository;
     private ProductRepository productRepository;
+    private AccessoryRepository accessoryRepository;
 
-    public ReturnRepository(SaleRepository saleRepository, ProductRepository productRepository) {
+    public ReturnRepository(SaleRepository saleRepository,
+                            ProductRepository productRepository,
+                            AccessoryRepository accessoryRepository) {
         this.saleRepository = saleRepository;
         this.productRepository = productRepository;
+        this.accessoryRepository = accessoryRepository;
         try {
             Files.createDirectories(Paths.get(DATA_DIRECTORY));
         } catch (IOException e) {
@@ -71,7 +75,7 @@ public class ReturnRepository {
 
         return String.join(SEPARATOR,
                 returnItem.getId(),
-                returnItem.getSale().getid(),
+                returnItem.getSale().getId(),
                 returnItem.getDate().toString(),
                 String.join(PRODUCT_JOINER, productIds),
                 returnItem.getReason(),
@@ -83,15 +87,25 @@ public class ReturnRepository {
 
         String id = fields[0];
         Sale sale = saleRepository.findById(fields[1]);
+
+        // Guard against orphan returns (sale no longer exists)
+        if (sale == null) {
+            return null;
+        }
+
         LocalDate date = LocalDate.parse(fields[2]);
         String productsRaw = fields[3];
         String reason = fields[4];
         double refund = Double.parseDouble(fields[5]);
 
+        List<Product> allProducts = new ArrayList<>();
+        allProducts.addAll(productRepository.loadAll());
+        allProducts.addAll(accessoryRepository.loadAll());
+
         List<Product> products = new ArrayList<>();
         if (!productsRaw.isBlank()) {
             for (String pid : productsRaw.split(PRODUCT_DELIMITER)) {
-                for (Product p : productRepository.loadAll()) {
+                for (Product p : allProducts) {
                     if (p.getId().equals(pid)) {
                         products.add(p);
                         break;

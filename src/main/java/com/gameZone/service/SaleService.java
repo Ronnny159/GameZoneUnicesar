@@ -6,6 +6,7 @@ import com.gameZone.persistence.SaleRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class SaleService {
 
@@ -33,6 +34,8 @@ public class SaleService {
     /**
      * Registers a new sale applying the best active promotion, generating
      * basic warranties for consoles and extended warranties when requested.
+     * The flow is: validate → create sale → subtotal → best promotion →
+     * warranties → final total → inventory → persist.
      */
     public Sale registerSale(Customer customer, Seller seller, List<Product> products,
                              List<String> productIdsWithExtendedWarranty) {
@@ -54,16 +57,16 @@ public class SaleService {
             }
         }
 
-        // 2. Create the sale (without promotion yet)
+        // 2. Create the sale
         String saleId = "S-" + System.currentTimeMillis();
         Sale sale = new Sale(saleId, customer, seller, products);
 
-        // 3. Apply best promotion (on subtotal)
+        // 3. Apply best promotion
         Promotion bestPromotion = promotionService.findBestPromotionFor(sale);
         if (bestPromotion != null) {
             double discount = bestPromotion.calculateDiscount(sale);
-            sale.setappliedPromotionName(bestPromotion.getName());
-            sale.setdiscountAmount(discount);
+            sale.setAppliedPromotionName(bestPromotion.getName());
+            sale.setDiscountAmount(discount);
         }
 
         // 4. Generate warranties for consoles
@@ -74,10 +77,8 @@ public class SaleService {
 
         for (Product p : products) {
             if (p instanceof Console) {
-                // Basic warranty (automatic)
                 warrantyService.assignBasicWarranty(p, sale, LocalDate.now());
 
-                // Extended warranty (optional)
                 if (extendedIds.contains(p.getId())) {
                     ExtendedWarranty ew = warrantyService.assignExtendedWarranty(p, sale, LocalDate.now());
                     warrantyCost += ew.getAdditionalCost();
@@ -127,7 +128,7 @@ public class SaleService {
         try {
             Accessory accessory = accessoryService.findById(id);
             return accessory.getQuantity() >= amount;
-        } catch (Exception e) {
+        } catch (NoSuchElementException e) {
             return false;
         }
     }

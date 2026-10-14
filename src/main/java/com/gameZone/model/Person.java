@@ -13,9 +13,9 @@ package com.gameZone.model;
  */
 public abstract class Person{
 
-    protected String id;
-    protected String name;
-    protected String phone;    
+    private String id;
+    private String name;
+    private String phone;    
    
     public Person(String id, String name, String phone){
         this.id = id;

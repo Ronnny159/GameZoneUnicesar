@@ -26,4 +26,5 @@ public class Controller extends Accessory {
     public String getDescription() {
         return super.getDescription() + " | Connection type: " + connectionType;
     }
+
 }
