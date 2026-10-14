@@ -17,21 +17,11 @@ public abstract class Warranty {
         this.endDate = startDate.plusMonths(getDurationInMonths());
     }
 
-    public String getId() {
-        return id;
-    }
-    public Product getProduct() {
-        return product;
-    }
-    public Sale getSale() {
-        return sale;
-    }
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-    public LocalDate getEndDate() {
-        return endDate;
-    }
+    public String getId() { return id; }
+    public Product getProduct() { return product; }
+    public Sale getSale() { return sale; }
+    public LocalDate getStartDate() { return startDate; }
+    public LocalDate getEndDate() { return endDate; }
 
     public abstract int getDurationInMonths();
     public abstract String getWarrantyType();
@@ -47,7 +37,7 @@ public abstract class Warranty {
                "-------------------\n" +
                "Warranty ID: " + id + "\n" +
                "Product: " + product.getTitle() + "\n" +
-               "Sale ID: " + sale.getid() + "\n" +
+               "Sale ID: " + sale.getId() + "\n" +
                "Start Date: " + startDate + "\n" +
                "End Date: " + endDate + "\n" +
                "Duration: " + getDurationInMonths() + " months\n" +

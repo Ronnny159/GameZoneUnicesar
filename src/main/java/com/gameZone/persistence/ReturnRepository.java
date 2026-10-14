@@ -75,7 +75,7 @@ public class ReturnRepository {
 
         return String.join(SEPARATOR,
                 returnItem.getId(),
-                returnItem.getSale().getid(),
+                returnItem.getSale().getId(),
                 returnItem.getDate().toString(),
                 String.join(PRODUCT_JOINER, productIds),
                 returnItem.getReason(),
@@ -92,7 +92,6 @@ public class ReturnRepository {
         String reason = fields[4];
         double refund = Double.parseDouble(fields[5]);
 
-        // Resolve products (both regular products and accessories)
         List<Product> allProducts = new ArrayList<>();
         allProducts.addAll(productRepository.loadAll());
         allProducts.addAll(accessoryRepository.loadAll());

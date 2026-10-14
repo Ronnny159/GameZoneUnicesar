@@ -42,7 +42,7 @@ public class ReturnService {
         List<Product> productsToReturn = new ArrayList<>();
         for (String pid : productIds) {
             boolean found = false;
-            for (Product p : sale.getproducts()) {
+            for (Product p : sale.getProducts()) {
                 if (p.getId().equals(pid)) {
                     productsToReturn.add(p);
                     found = true;
@@ -93,7 +93,7 @@ public class ReturnService {
     public List<Return> viewReturnsByCustomer(String customerId) {
         List<Return> result = new ArrayList<>();
         for (Return r : returnRepository.loadAll()) {
-            if (r.getSale().getcostumer().getId().equals(customerId)) {
+            if (r.getSale().getCustomer().getId().equals(customerId)) {
                 result.add(r);
             }
         }
@@ -103,7 +103,7 @@ public class ReturnService {
     public List<Return> viewReturnsBySale(String saleId) {
         List<Return> result = new ArrayList<>();
         for (Return r : returnRepository.loadAll()) {
-            if (r.getSale().getid().equals(saleId)) {
+            if (r.getSale().getId().equals(saleId)) {
                 result.add(r);
             }
         }
@@ -113,7 +113,7 @@ public class ReturnService {
     public double calculateMonthlySales(int month, int year) {
         double total = 0.0;
         for (Sale s : saleRepository.loadAll()) {
-            if (s.getdate().getMonthValue() == month && s.getdate().getYear() == year) {
+            if (s.getDate().getMonthValue() == month && s.getDate().getYear() == year) {
                 total += s.calculateTotal();
             }
         }

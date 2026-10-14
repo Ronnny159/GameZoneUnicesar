@@ -5,6 +5,7 @@ import com.gameZone.service.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class SaleMenu {
@@ -79,7 +80,7 @@ public class SaleMenu {
                 Accessory a = accessoryService.findById(productId);
                 selected.add(a);
                 System.out.println("  Added accessory: " + a.getTitle());
-            } catch (Exception e) {
+            } catch (NoSuchElementException e) {
                 System.out.println("  Item not found.");
             }
         }
@@ -89,7 +90,6 @@ public class SaleMenu {
             return;
         }
 
-        // Ask for extended warranty on each console
         List<String> extendedWarrantyIds = new ArrayList<>();
         for (Product p : selected) {
             if (p instanceof Console) {
@@ -130,7 +130,7 @@ public class SaleMenu {
             return;
         }
         for (Sale s : sales) {
-            System.out.println("  " + s.getdate() + " | Total: $" + s.calculateTotal());
+            System.out.println("  " + s.getDate() + " | Total: $" + s.calculateTotal());
         }
     }
 
@@ -142,8 +142,8 @@ public class SaleMenu {
             return;
         }
         for (Sale s : sales) {
-            System.out.println("  " + s.getdate() + " | Customer: " +
-                    s.getcostumer().getName() + " | Total: $" + s.calculateTotal());
+            System.out.println("  " + s.getDate() + " | Customer: " +
+                    s.getCustomer().getName() + " | Total: $" + s.calculateTotal());
         }
     }
 }

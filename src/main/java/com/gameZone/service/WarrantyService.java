@@ -21,7 +21,7 @@ public class WarrantyService {
         if (product == null || sale == null) {
             throw new IllegalArgumentException("Product and Sale cannot be null.");
         }
-        String id = "BW-" + sale.getid() + "-" + product.getId();
+        String id = "BW-" + sale.getId() + "-" + product.getId();
         BasicWarranty warranty = new BasicWarranty(id, product, sale, startDate);
 
         List<Warranty> all = warrantyRepository.loadAll();
@@ -34,7 +34,7 @@ public class WarrantyService {
         if (product == null || sale == null) {
             throw new IllegalArgumentException("Product and Sale cannot be null.");
         }
-        String id = "EW-" + sale.getid() + "-" + product.getId();
+        String id = "EW-" + sale.getId() + "-" + product.getId();
         ExtendedWarranty warranty = new ExtendedWarranty(id, product, sale, startDate);
 
         List<Warranty> all = warrantyRepository.loadAll();
@@ -46,7 +46,7 @@ public class WarrantyService {
     public Warranty findWarrantyByProduct(String productId, String saleId) {
         for (Warranty w : warrantyRepository.loadAll()) {
             if (w.getProduct().getId().equals(productId) &&
-                w.getSale().getid().equals(saleId)) {
+                w.getSale().getId().equals(saleId)) {
                 return w;
             }
         }
@@ -86,7 +86,7 @@ public class WarrantyService {
         List<Warranty> toRemove = new ArrayList<>();
         for (Warranty w : warranties) {
             if (w.getProduct().getId().equals(productId) &&
-                w.getSale().getid().equals(saleId)) {
+                w.getSale().getId().equals(saleId)) {
                 refund += w.getAdditionalCost();
                 toRemove.add(w);
             }
