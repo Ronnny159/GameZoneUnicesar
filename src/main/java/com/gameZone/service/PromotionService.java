@@ -27,22 +27,16 @@ public class PromotionService {
     }
 
     public CategoryDiscount registerCategoryDiscount(String id, String name,
-        LocalDate startDate, LocalDate endDate,String category, double percentage) {
-            
-        if (!category.equalsIgnoreCase("VIDEOGAME") &&
-            !category.equalsIgnoreCase("CONSOLE") &&
-            !category.equalsIgnoreCase("ACCESSORY")) {
-            throw new IllegalArgumentException("Invalid category: " + category);
-        }
-        CategoryDiscount promotion = new CategoryDiscount(id, name, startDate, endDate, category, percentage);
+        LocalDate startDate, LocalDate endDate, String category, double percentage) {
+        Category cat = Category.fromString(category);  // throws if invalid
+        CategoryDiscount promotion = new CategoryDiscount(id, name, startDate, endDate, cat, percentage);
         promotions.add(promotion);
         persist();
         return promotion;
     }
 
     public BulkPurchaseDiscount registerBulkPurchaseDiscount(String id, String name,
-                                                              LocalDate startDate, LocalDate endDate,
-                                                              int minQuantity, double percentage) {
+            LocalDate startDate, LocalDate endDate, int minQuantity, double percentage) {
         BulkPurchaseDiscount promotion = new BulkPurchaseDiscount(id, name, startDate, endDate, minQuantity, percentage);
         promotions.add(promotion);
         persist();
