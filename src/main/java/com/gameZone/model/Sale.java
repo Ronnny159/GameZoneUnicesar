@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gameZone.service.WarrantyService;
+
 /**
  * Represents a sale transaction in the store.
  * A sale involves a customer, a seller, and one or more products.
@@ -130,5 +132,23 @@ public class Sale implements Serializable {
     @Override
     public String toString() {
         return "Sale id: " + saleId + ", date: " + date + ", total: " + calculateTotal();
+    }
+
+    /**
+     * Calculates the total extended warranty cost for this sale.
+     * Delegates to the warranty service to get the warranties for this sale
+     * and sums their additional cost.
+     *
+     * @param warrantyService the warranty service
+     * @return the total extended warranty cost
+     */
+    public double calculateWarrantyCost(WarrantyService warrantyService) {
+        double total = 0.0;
+        for (Warranty w : warrantyService.listAllWarranties()) {
+            if (w.getSale().getId().equals(this.saleId) && w instanceof ExtendedWarranty) {
+                total += w.getAdditionalCost();
+            }
+        }
+        return total;
     }
 }

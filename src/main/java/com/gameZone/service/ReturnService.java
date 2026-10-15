@@ -12,19 +12,16 @@ public class ReturnService {
 
     private ReturnRepository returnRepository;
     private SaleRepository saleRepository;
-    private ProductService productService;
-    private AccessoryService accessoryService;
+    private InventoryService inventoryService;
     private WarrantyService warrantyService;
 
     public ReturnService(ReturnRepository returnRepository,
                          SaleRepository saleRepository,
-                         ProductService productService,
-                         AccessoryService accessoryService,
+                         InventoryService inventoryService,
                          WarrantyService warrantyService) {
         this.returnRepository = returnRepository;
         this.saleRepository = saleRepository;
-        this.productService = productService;
-        this.accessoryService = accessoryService;
+        this.inventoryService = inventoryService;
         this.warrantyService = warrantyService;
     }
 
@@ -33,12 +30,10 @@ public class ReturnService {
         if (sale == null) {
             throw new IllegalArgumentException("Sale not found: " + saleId);
         }
-
         if (!sale.canBeReturned()) {
             throw new IllegalArgumentException("Return period (30 days) has expired.");
         }
 
-        // Validate products belong to the sale
         List<Product> productsToReturn = new ArrayList<>();
         for (String pid : productIds) {
             boolean found = false;
@@ -54,29 +49,23 @@ public class ReturnService {
             }
         }
 
-        // Create return and calculate proportional refund
         String returnId = "R-" + System.currentTimeMillis();
         Return returnItem = new Return(returnId, sale, LocalDate.now(), productsToReturn, reason, 0.0);
         double refund = returnItem.calculateRefundAmount();
 
-        // Cancel warranties for consoles + add warranty refund
+        // V-07: cancel warranties via polymorphic method
         double warrantyRefund = 0.0;
         for (Product p : productsToReturn) {
-            if (p instanceof Console) {
+            if (p.requiresBasicWarranty()) {
                 warrantyRefund += warrantyService.cancelWarranties(p.getId(), saleId);
             }
         }
 
-        // Restore stock
+        // V-07: restore stock via InventoryService (no more instanceof)
         for (Product p : productsToReturn) {
-            if (p instanceof Accessory) {
-                accessoryService.restoreStock(p.getId(), 1);
-            } else {
-                productService.restoreStock(p.getId(), 1);
-            }
+            inventoryService.restoreStock(p.getId(), 1);
         }
 
-        // Persist return (with total refund including warranty cost)
         Return finalReturn = new Return(returnId, sale, LocalDate.now(),
                 productsToReturn, reason, refund + warrantyRefund);
 
@@ -86,9 +75,7 @@ public class ReturnService {
         return finalReturn;
     }
 
-    public List<Return> viewAllReturns() {
-        return returnRepository.loadAll();
-    }
+    public List<Return> viewAllReturns() { return returnRepository.loadAll(); }
 
     public List<Return> viewReturnsByCustomer(String customerId) {
         List<Return> result = new ArrayList<>();
