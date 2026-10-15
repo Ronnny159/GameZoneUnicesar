@@ -74,6 +74,10 @@ public class PromotionRepository {
             line.append("BULK").append(SEPARATOR)
                     .append(bd.getMinQuantity()).append(SEPARATOR)
                     .append(bd.getPercentage());
+        } else if (promotion instanceof CategoryDiscount cd) {
+            line.append("CATEGORY").append(SEPARATOR)
+                    .append(cd.getCategory().name()).append(SEPARATOR)
+                    .append(cd.getPercentage());
         }
 
         return line.toString();
@@ -92,7 +96,7 @@ public class PromotionRepository {
             case "PERCENTAGE" -> new PercentageDiscount(id, name, startDate, endDate,
                     Double.parseDouble(fields[5]));
             case "CATEGORY" -> new CategoryDiscount(id, name, startDate, endDate,
-                    fields[5], Double.parseDouble(fields[6]));
+            Category.fromString(fields[5]), Double.parseDouble(fields[6]));
             case "BULK" -> new BulkPurchaseDiscount(id, name, startDate, endDate,
                     Integer.parseInt(fields[5]), Double.parseDouble(fields[6]));
             default -> null;

@@ -22,8 +22,8 @@ public class VideoGame extends Product {
     public String getAgeRating() { return ageRating; }
     
     @Override
-    public String getCategory() {
-        return "VIDEOGAME";
+    public Category getCategory() {
+        return Category.VIDEOGAME;
     }
 
     @Override

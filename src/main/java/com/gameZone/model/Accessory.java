@@ -33,8 +33,8 @@ public abstract class Accessory extends Product {
     public abstract String getAccessoryType();
 
     @Override
-    public String getCategory() {
-        return "ACCESSORY";
+    public Category getCategory() {
+        return Category.ACCESSORY;
     }
 
     @Override
@@ -44,5 +44,10 @@ public abstract class Accessory extends Product {
                " | Price: $" + getPrice() +
                " | Stock: " + getQuantity() +
                " | Compatible consoles: " + String.join(",", compatibleConsoles);
+    }
+
+    @Override
+    public boolean isAccessory() {
+        return true;
     }
 }

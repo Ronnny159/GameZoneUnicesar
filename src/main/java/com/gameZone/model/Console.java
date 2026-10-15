@@ -22,8 +22,8 @@ public class Console extends Product {
     public int getGeneration() { return generation; }
     
     @Override
-    public String getCategory() {
-        return "CONSOLE";
+    public Category getCategory() {
+        return Category.CONSOLE;  
     }
 
     @Override
@@ -34,5 +34,15 @@ public class Console extends Product {
                " | Generation: " + generation + 
                " | Price: $" + getPrice() + 
                " | Stock: " + getQuantity();
+    }
+
+    @Override
+    public boolean requiresBasicWarranty() {
+        return true;
+    }
+
+    @Override
+    public boolean supportsExtendedWarranty() {
+        return true;
     }
 }

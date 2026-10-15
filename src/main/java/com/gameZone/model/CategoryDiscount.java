@@ -9,21 +9,21 @@ import java.time.LocalDate;
  */
 public class CategoryDiscount extends Promotion {
 
-    private String category;
+    private Category category;
     private double percentage;
 
     public CategoryDiscount(String id, String name, LocalDate startDate, LocalDate endDate,
-                            String category, double percentage) {
-        super(id, name, startDate, endDate);
-        this.category = category;
-        this.percentage = percentage;
+                        Category category, double percentage) {
+    super(id, name, startDate, endDate);
+    this.category = category;
+    this.percentage = percentage;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
@@ -39,7 +39,7 @@ public class CategoryDiscount extends Promotion {
     public double calculateDiscount(Sale sale) {
         double categorySubtotal = 0.0;
         for (Product product : sale.getProducts()) {
-            if (product.getCategory().equalsIgnoreCase(category)) {
+            if (product.getCategory() == category) {
                 categorySubtotal += product.getPrice();
             }
         }
