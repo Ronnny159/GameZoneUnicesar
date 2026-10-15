@@ -90,14 +90,13 @@ public class SaleMenu {
             return;
         }
 
+        List<Product> eligible = saleService.getExtendedWarrantyEligible(selected);
         List<String> extendedWarrantyIds = new ArrayList<>();
-        for (Product p : selected) {
-            if (p instanceof Console) {
-                String answer = ConsoleUtils.readString(input,
-                        "Add extended warranty for console '" + p.getTitle() + "'? (y/n): ");
-                if (answer.equalsIgnoreCase("y")) {
-                    extendedWarrantyIds.add(p.getId());
-                }
+        for (Product p : eligible) {
+            String answer = ConsoleUtils.readString(input,
+                    "Add extended warranty for '" + p.getTitle() + "'? (y/n): ");
+            if (answer.equalsIgnoreCase("y")) {
+                extendedWarrantyIds.add(p.getId());
             }
         }
 
